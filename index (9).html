@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Tracker - Generate Links</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .generated-link {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .generated-link.show {
+            display: block;
+        }
+        
+        .link-box {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+        
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background: #218838;
+        }
+        
+        .copy-btn.copied {
+            background: #5cb85c;
+        }
+        
+        .locations-list {
+            margin-top: 20px;
+        }
+        
+        .location-item {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .location-item h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .location-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .location-detail strong {
+            color: #333;
+        }
+        
+        .location-detail span {
+            color: #666;
+        }
+        
+        .map-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .map-link:hover {
+            background: #5568d3;
+        }
+        
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .refresh-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: background 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background: #138496;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📍 Location Tracker</h1>
+            <p>Generate tracking links and see where they're clicked from</p>
+        </div>
+        
+        <div class="content">
+            <div class="alert">
+                <strong>⚠️ Important:</strong> This requires the receiver to grant location permission. Use only with consent for educational purposes.
+            </div>
+            
+            <!-- Generate Link Section -->
+            <div class="section">
+                <h2>🔗 Generate New Tracking Link</h2>
+                <div class="input-group">
+                    <label for="linkName">Link Name/Description (optional)</label>
+                    <input type="text" id="linkName" placeholder="e.g., Field Survey #1, Meeting Location, etc.">
+                </div>
+                
+                <div class="input-group">
+                    <label for="redirectUrl">Redirect URL After Location Capture (optional)</label>
+                    <input type="url" id="redirectUrl" placeholder="https://example.com (leave empty for thank you page)">
+                </div>
+                
+                <button class="btn" onclick="generateLink()">Generate Tracking Link</button>
+                
+                <div class="generated-link" id="generatedLink">
+                    <h3 style="color: #28a745; margin-bottom: 10px;">✅ Link Generated!</h3>
+                    <p style="color: #666; margin-bottom: 10px;">Share this link with anyone:</p>
+                    <div class="link-box" id="linkBox"></div>
+                    <button class="copy-btn" onclick="copyLink()">📋 Copy Link</button>
+                </div>
+            </div>
+            
+            <hr style="border: none; border-top: 2px solid #e0e0e0; margin: 30px 0;">
+            
+            <!-- Tracked Locations Section -->
+            <div class="section">
+                <h2>📊 Tracked Locations</h2>
+                <button class="refresh-btn" onclick="loadLocations()">🔄 Refresh</button>
+                <div class="locations-list" id="locationsList">
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <p>No locations tracked yet. Generate a link and share it to start tracking!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate unique tracking link
+        function generateLink() {
+            const linkName = document.getElementById('linkName').value || 'Unnamed Link';
+            const redirectUrl = document.getElementById('redirectUrl').value || '';
+            
+            // Generate unique ID
+            const trackingId = 'loc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            // Store link info in localStorage
+            const linkInfo = {
+                id: trackingId,
+                name: linkName,
+                redirectUrl: redirectUrl,
+                createdAt: new Date().toISOString()
+            };
+            
+            let links = JSON.parse(localStorage.getItem('trackingLinks') || '[]');
+            links.push(linkInfo);
+            localStorage.setItem('trackingLinks', JSON.stringify(links));
+            
+            // Generate the tracking URL
+            const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
+            const trackingUrl = `${baseUrl}track.html?id=${trackingId}`;
+            
+            // Display the generated link
+            document.getElementById('linkBox').textContent = trackingUrl;
+            document.getElementById('generatedLink').classList.add('show');
+            
+            // Clear inputs
+            document.getElementById('linkName').value = '';
+            document.getElementById('redirectUrl').value = '';
+        }
+        
+        // Copy link to clipboard
+        function copyLink() {
+            const linkBox = document.getElementById('linkBox');
+            const text = linkBox.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+        
+        // Load and display tracked locations
+        function loadLocations() {
+            const locations = JSON.parse(localStorage.getItem('locations') || '[]');
+            const links = JSON.parse(localStorage.getItem('trackingLinks') || '[]');
+            const locationsList = document.getElementById('locationsList');
+            
+            if (locations.length === 0) {
+                locationsList.innerHTML = `
+                    <div class="empty-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <p>No locations tracked yet. Generate a link and share it to start tracking!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by most recent first
+            locations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            locationsList.innerHTML = locations.map(loc => {
+                const link = links.find(l => l.id === loc.trackingId);
+                const linkName = link ? link.name : 'Unknown Link';
+                const date = new Date(loc.timestamp);
+                
+                return `
+                    <div class="location-item">
+                        <h3>${linkName}</h3>
+                        <div class="location-detail">
+                            <strong>📅 Clicked:</strong>
+                            <span>${date.toLocaleString()}</span>
+                        </div>
+                        <div class="location-detail">
+                            <strong>🌐 Latitude:</strong>
+                            <span>${loc.latitude.toFixed(6)}</span>
+                        </div>
+                        <div class="location-detail">
+                            <strong>🌐 Longitude:</strong>
+                            <span>${loc.longitude.toFixed(6)}</span>
+                        </div>
+                        <div class="location-detail">
+                            <strong>🎯 Accuracy:</strong>
+                            <span>${loc.accuracy ? loc.accuracy.toFixed(0) + ' meters' : 'N/A'}</span>
+                        </div>
+                        ${loc.userAgent ? `
+                        <div class="location-detail">
+                            <strong>📱 Device:</strong>
+                            <span>${loc.userAgent}</span>
+                        </div>
+                        ` : ''}
+                        <a href="https://www.google.com/maps?q=${loc.latitude},${loc.longitude}" 
+                           target="_blank" 
+                           class="map-link">
+                            🗺️ View on Google Maps
+                        </a>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Load locations on page load
+        loadLocations();
+        
+        // Auto-refresh every 10 seconds
+        setInterval(loadLocations, 10000);
+    </script>
+</body>
+</html>
